@@ -20,5 +20,8 @@
     include: "{{ role }}"
     loop: 
       - roles/extroot/main.yml
+      - roles/bluetooth/main.yml
+      - roles/dependencies/main.yml
+      - roles/code/main.yml
     loop_control:
       loop_var: role
