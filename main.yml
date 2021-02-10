@@ -1,0 +1,24 @@
+---
+- name: Blank Device Setup
+  hosts: Blank
+  gather_facts: yes
+  tasks: 
+  - name: Pull in variables from group_vars/vars
+    include_vars: "{{ variable_file }}"
+    loop: 
+      - group_vars/vars
+      #- group_vars/vault
+    loop_control:
+      loop_var: variable_file
+
+  - name: Copy host file to Ansible Default Location
+    copy:
+      src: /root/Ansible/Atlassian/hosts
+      dest: /etc/ansible/hosts
+
+  - name: Starting roles
+    include: "{{ role }}"
+    loop: 
+      - roles/extroot/main.yml
+    loop_control:
+      loop_var: role

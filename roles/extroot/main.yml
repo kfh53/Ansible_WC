@@ -1,0 +1,16 @@
+- name: Transfer extroot script to remote host(s)
+  copy: 
+    src: extroot.sh
+    dest: /tmp
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Execute extroot 
+  command: /tmp/extroot.sh
+
+- name: Rebooting device
+  reboot:
+    reboot_timeout: 180
+
+#TODO - Add assertion that our largest drive is > 10GB ansible_mounts
