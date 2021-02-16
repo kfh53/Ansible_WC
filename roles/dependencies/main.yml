@@ -20,13 +20,16 @@
       - psutil
       - urllib3
 
-# TODO: Add bluetooth.h and libbluetooth or w/e here
+- name: Copy header files
+  copy:
+    src: include/
+    dest: /usr/include/
 
 
-# - name: Copy Pybluez 0.22 to Device
-#   copy: 
-#     src: Pybluez-0.22.tar
-#     dest: /root/
+- name: Copy Pybluez 0.22 to Device
+  copy: 
+    src: Pybluez-0.22.tar
+    dest: /root/
 
 - name: Unpack Pybluez
   tar:
@@ -36,5 +39,11 @@
 - name: Install Pybluez
   command: python /root/Pybluez/setup.py install
 
-# Copy ipk files
-# install all ipks
+- name: Copy km dependencies
+  copy: 
+    src: dependencies/
+    dest: /root/dependencies
+
+- name: Install ipk files
+  command: "cd /root/dependencies/ && opkg install ./*.ipk"
+

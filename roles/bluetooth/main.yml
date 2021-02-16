@@ -1,3 +1,43 @@
-# Install bluetooth opkg packages
-# Update bluetoothd file
-# reload and restart services
+- name: opkg update and install bluetooth dependencies
+  #community.general.opkg?
+  opkg:
+    name: "{{ package }}"
+    update_cache: yes
+  loop: 
+    - kmod-bluetooth
+    - bluez-libs
+    - bluez-utils
+    - kmod-usb-core
+    - kmod-usb-uhci
+    - kmod-usb2
+    - usbutils
+    - bluez-daemon
+  loop_control:
+    loop_var: package
+  
+- name: Replace command line in bluetoothd service file
+  lineinfile: 
+    state: present
+    path: /etc/init.d/bluetoothd
+    regex: "procd_set_param command \"$PROG\" -n"
+    line: "procd_set_param command \"$PROG\" --compat -n"
+
+- name: Reload Bluetooth services
+  service:
+    name: "{{ service_reload }}"
+    state: reloaded
+  loop:
+    - dbus
+    - bluetoothd
+  loop_control:
+    loop_var: service_reload
+
+- name: Restart Bluetooth services
+  service:
+    name: "{{ service_restart }}"
+    state: reloaded
+  loop:
+    - dbus
+    - bluetoothd
+  loop_control:
+    loop_var: service_restart
